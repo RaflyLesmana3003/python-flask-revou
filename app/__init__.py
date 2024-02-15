@@ -2,12 +2,8 @@ from flask import Flask
 from app.controller.customers import customer_route
 import os
 from app.utils.database import db, migrate
-from app.models import customer
-from dotenv import load_dotenv
 
 app = Flask(__name__)
-
-load_dotenv()
 
 DATABASE_TYPE = os.getenv('DATABASE_TYPE')
 DATABASE_USER = os.getenv('DATABASE_USER')
