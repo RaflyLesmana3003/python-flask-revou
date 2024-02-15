@@ -1,6 +1,16 @@
 
 FROM python:3.12.1-slim
 
+
+ARG FLASK_DEBUG
+ARG FLASK_ENV
+ARG DATABASE_TYPE
+ARG DATABASE_NAME
+ARG DATABASE_HOST
+ARG DATABASE_PORT
+ARG DATABASE_USER
+ARG DATABASE_PASSWORD
+
 RUN apt-get update && apt-get install -y \
       libpq-dev \
       gcc \
