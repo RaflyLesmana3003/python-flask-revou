@@ -7,6 +7,11 @@ class Customer_repo():
       customers = Customer.query.all()
       return customers
    
+   def create_customer(self, customer):
+      db.session.add(customer)
+      db.session.commit()
+      return customer
+
    def update_customer(self, id, customer):
       customer_obj = Customer.query.get(id)
       customer_obj.name = customer.name

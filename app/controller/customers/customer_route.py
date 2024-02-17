@@ -4,6 +4,7 @@ from app.models.customer import Customer
 from app.utils.api_response import api_response
 from app.service.customer_service import Customer_service
 from app.controller.customers.schema.update_customer_request import Update_customer_request
+from app.controller.customers.schema.create_customer_request import Create_customer_request
 from pydantic import ValidationError
 
 customer_blueprint = Blueprint('customer_endpoint', __name__)
@@ -22,7 +23,11 @@ def get_list_customer():
       )
    
    except Exception as e:
-      return str(e), 500
+      return api_response(
+          status_code=500,
+          message=str(e),
+          data={}
+      )
    
    
 @customer_blueprint.route("/search", methods=["GET"])
@@ -40,7 +45,11 @@ def search_customer():
       )
    
    except Exception as e:
-      return str(e), 500
+      return api_response(
+          status_code=500,
+          message=str(e),
+          data={}
+      )
    
 @customer_blueprint.route("/<int:customer_id>", methods=["GET"])
 def get_customer(customer_id):
@@ -52,23 +61,41 @@ def get_customer(customer_id):
 
          return customer.as_dict(), 200
       except Exception as e:
-         return str(e), 500
+         return api_response(
+          status_code=500,
+          message=str(e),
+          data=customer
+      )
 
 @customer_blueprint.route("/", methods=["POST"])
 def create_customer():
-   try: 
-      data = request.json
+      try:
+      
+         data = request.json
+         update_customer_request = Create_customer_request(**data)
 
-      customer = Customer()
-      customer.name = data["name"]
-      customer.phone = data["phone"]
-      customer.gender = data["gender"]
-      db.session.add(customer)
-      db.session.commit()
 
-      return "Customer created", 201
-   except Exception as e:
-      return str(e), 500
+         customer_service = Customer_service()
+
+         customers = customer_service.create_customer(update_customer_request)
+
+         return api_response(
+          status_code=200,
+          message="updated",
+          data=customers
+      )
+      except ValidationError as e:
+         return  api_response(
+          status_code=400,
+          message=e.errors(),
+          data={}
+      )
+      except Exception as e:
+         api_response(
+          status_code=500,
+          message=str(e),
+          data={}
+      )
 
 @customer_blueprint.route("/<int:customer_id>", methods=["PUT"])
 def update_customer(customer_id):
@@ -94,7 +121,11 @@ def update_customer(customer_id):
           data={}
       )
       except Exception as e:
-         return str(e), 500
+         api_response(
+          status_code=500,
+          message=str(e),
+          data={}
+      )
 
 
 @customer_blueprint.route("/<int:customer_id>", methods=["DELETE"])
@@ -108,6 +139,14 @@ def delete_customer(customer_id):
          db.session.delete(customer)
          db.session.commit()
 
-         return 'Delete successful', 200
+         return api_response(
+          status_code=200,
+          message="deleted",
+          data=customer.as_dict()
+      )
       except Exception as e:
-         return str(e), 500
+         api_response(
+          status_code=500,
+          message=str(e),
+          data={}
+      )
