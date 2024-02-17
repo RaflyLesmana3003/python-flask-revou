@@ -16,4 +16,4 @@ app.config["SQLALCHEMY_DATABASE_URI"] = f"{DATABASE_TYPE}://{DATABASE_USER}:{DAT
 db.init_app(app)
 migrate.init_app(app, db)
 
-app.register_blueprint(customer_route.customer_blueprint, url_prefix="/v1/customer")
+app.register_blueprint(customer_route.customer_blueprint, url_prefix="/v1/customers")
