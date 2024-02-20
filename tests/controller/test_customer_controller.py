@@ -72,12 +72,11 @@ def test_delete_customer(test_app, mocker):
       "phone": 23,
       "gender": "laki laki"
    }
-   
+
    mocker.patch.object(Customer_service, 'delete_customer', return_value=expected_response)
    with test_app.test_client() as client:
       # Act
       response = client.delete("/v1/customers/23")
 
-   print(response.json)
    # Assert
    assert response.status_code == 200

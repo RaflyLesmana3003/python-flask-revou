@@ -11,5 +11,6 @@ class Customer(db.Model):
          return {
                   "id": self.id,
                   "name": self.name,
-                  "phone": self.phone
+                  "phone": self.phone,
+                  "gender": self.gender,
                }
