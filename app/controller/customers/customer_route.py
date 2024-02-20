@@ -137,7 +137,12 @@ def delete_customer(customer_id):
         customer_service = Customer_service()
 
         customer = customer_service.delete_customer(customer_id)
-        
+        if customer == "Customer not found":
+            return api_response(
+                status_code=404,
+                message=customer,
+                data="kosong mas"
+            )
         return api_response(
             status_code=200,
             message="deleted",
