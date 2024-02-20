@@ -19,6 +19,13 @@ class Customer_repo():
 
       db.session.commit()
       return customer_obj
+   
+   def delete_customer(self, id):
+      customer_obj = Customer.query.get(id)
+
+      db.session.delete(customer_obj)
+      db.session.commit()
+      return customer_obj
 
    def search_customer(self, name):
       customers = Customer.query.filter(Customer.name.like(f"%{name}%")).all()

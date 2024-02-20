@@ -26,3 +26,11 @@ class Customer_service:
    def update_customer(self, id, customer_data_dto):
       updated_customer = self.customer_repo.update_customer(id, customer_data_dto)
       return updated_customer.as_dict()
+   
+   def delete_customer(self, id):
+      customer = Customer.query.get(id)
+      if not customer:
+            return "Customer not found"
+
+      deleted_customer = self.customer_repo.delete_customer(id)
+      return deleted_customer.as_dict()

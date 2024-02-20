@@ -1,36 +1,83 @@
-def test_get_customers(test_app):
-   response =test_app.get("v1/customers/")
-   print(response.json['data'])
-   assert len(response.json['data']) == 7
 
-def test_post_customers(test_app):
+from app import db
+from app.service.customer_service import Customer_service
+
+
+def test_get_customers(test_app, mocker):
+   # Arrange
+   mock_customer_data = [
+      {
+         "id": 22,
+         "name": "rafly",
+         "phone": 23
+      },
+   ]
+   mocker.patch.object(Customer_service, 'get_customers',
+                     return_value=mock_customer_data)
+
+   # Act
+   with test_app.test_client() as client:
+      response = client.get("/v1/customers/")
+
+   # Assert
+   assert response.status_code == 200
+   assert len(response.json['data']) == len(mock_customer_data)
+   assert response.json['data'] == mock_customer_data
+
+
+def test_post_customers(test_app, mocker):
+   # Arrange
    data = {
-         "name": "raly", 
-         "phone": 23,
-         "gender": "laki laki"
+      "name": "raly",
+      "phone": 23,
+      "gender": "laki laki"
    }
+   mocker.patch.object(Customer_service, 'create_customer', return_value=data)
+
+   # Act
+   with test_app.test_client() as client:
+      response = client.post("/v1/customers/", json=data)
+
+   # Assert
    expected_response = {
-      'id': 21, 
-      'name': 'raly', 
-      'phone': 23
+      "name": "raly",
+      "phone": 23,
+      "gender": "laki laki"
    }
-
-   response = test_app.post("v1/customers/", json=data)
-
    assert response.json['data'] == expected_response
    assert response.status_code == 201
 
-def test_put_customers(test_app):
-   data =  {
-         "name": "rafly", 
-         "phone": 23,
+
+def test_put_customer_update(test_app, mocker):
+   # Arrange
+   data = {
+      "name": "rafly",
+      "phone": 23,
    }
-   response = test_app.put("v1/customers/22", json=data)
-   
+
+   mocker.patch.object(Customer_service, 'update_customer', return_value=data)
+
+   # Act
+   with test_app.test_client() as client:
+         response = client.put("/v1/customers/22", json=data)
+
+   # Assert
    assert response.status_code == 200
 
 
-def test_put_customers(test_app):
-   response = test_app.delete("v1/customers/22")
+def test_delete_customer(test_app, mocker):
+   # Arrange
+   expected_response = {
+      "name": "raly",
+      "phone": 23,
+      "gender": "laki laki"
+   }
    
+   mocker.patch.object(Customer_service, 'delete_customer', return_value=expected_response)
+   with test_app.test_client() as client:
+      # Act
+      response = client.delete("/v1/customers/23")
+
+   print(response.json)
+   # Assert
    assert response.status_code == 200

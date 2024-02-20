@@ -82,7 +82,7 @@ def create_customer():
         customers = customer_service.create_customer(update_customer_request)
 
         return api_response(
-            status_code=200,
+            status_code=201,
             message="updated",
             data=customers
         )
@@ -134,18 +134,14 @@ def update_customer(customer_id):
 @customer_blueprint.route("/<int:customer_id>", methods=["DELETE"])
 def delete_customer(customer_id):
     try:
-        customer = Customer.query.get(customer_id)
+        customer_service = Customer_service()
 
-        if not customer:
-            return "Customer not found", 404
-
-        db.session.delete(customer)
-        db.session.commit()
-
+        customer = customer_service.delete_customer(customer_id)
+        
         return api_response(
             status_code=200,
             message="deleted",
-            data=customer.as_dict()
+            data=customer
         )
     except Exception as e:
         return api_response(
