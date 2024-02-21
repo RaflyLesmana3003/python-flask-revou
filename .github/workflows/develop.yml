@@ -1,1 +1,63 @@
+name: Deploy to Railway (development env)
 
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deployment:
+    runs-on: ubuntu-latest
+    environment: development
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    # RUN UNIT TEST
+    - name: Set up python
+      id: setup-python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+      with:
+        virtualenvs-create: true
+        virtualenvs-in-project: true
+        installer-parallel: true
+    
+    - name: Install project
+      run: poetry install
+
+    - name: Install project
+      run: poetry run pytest --cov=app --cov-fail-under=50
+
+    # RAILWAY DEPLOYMENT
+    - name: Use Node 18
+      uses: actions/setup-node@v1
+      with:
+        node-version: 18.x
+
+    - name: Install Railway
+      run: npm i -g @railway/cli
+
+    - name: Deploy to railway
+      run: railway up --service python-flask-revou
+      env:
+        RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+    
+    # SUCCESS NOTIFICATION
+    - name: Discord notify on success
+      uses: tsickert/discord-webhook@v5.3.0
+      with:
+        webhook-url: ${{ secrets.WEBHOOK_URL }}
+        content: "CHANGES ON DEPLOY!!🔥"
+    
+    - name: Discord notify on fail
+      if: ${{ failure() }}
+      uses: tsickert/discord-webhook@v5.3.0
+      with:
+        webhook-url: ${{ secrets.WEBHOOK_URL }}
+        content: "PIPELINE FAIL 🥲"

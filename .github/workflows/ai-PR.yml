@@ -1,0 +1,24 @@
+name: code review
+
+on:
+  push:
+    branches:
+      - develop
+
+
+jobs:
+  deployment:
+    runs-on: ubuntu-latest
+    environment: development
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Codeball
+      uses: sturdy-dev/codeball-action@v2
+      with:
+        approvePullRequests: "true"
+        labelPullRequestsWhenApproved: "false"
+        labelPullRequestsWhenReviewNeeded: "false"
+        failJobsWhenReviewNeeded: "false"
