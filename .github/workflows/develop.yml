@@ -55,8 +55,8 @@ jobs:
         content: "CHANGES ON DEPLOY!!🔥"
     
     - name: Discord notify on fail
-          if: ${{ failure() }}
-          uses: tsickert/discord-webhook@v5.3.0
-          with:
-            webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
-            content: "PIPELINE FAIL 🥲"
+      if: ${{ failure() }}
+      uses: tsickert/discord-webhook@v5.3.0
+      with:
+        webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        content: "PIPELINE FAIL 🥲"
