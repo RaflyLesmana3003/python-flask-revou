@@ -10,8 +10,25 @@ jobs:
     environment: development
 
     steps:
-    - name: Discord Webhook Action
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Discord notify on start
       uses: tsickert/discord-webhook@v5.3.0
       with:
         webhook-url: ${{ secrets.WEBHOOK_URL }}
-        content: "TEST NOTIFICATION"
+        content: "BUILD ON PROGRESS"
+
+
+    - name: Use Node 18
+      uses: actions/setup-node@v1
+      with:
+        node-version: 18.x
+
+    - name: Install Railway
+      run: npm i -g @railway/cli
+
+    - name: Deploy to railway
+      run: railway up
+      env:
+        RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
