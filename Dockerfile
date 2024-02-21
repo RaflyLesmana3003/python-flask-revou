@@ -11,6 +11,16 @@ ARG DATABASE_PORT
 ARG DATABASE_USER
 ARG DATABASE_PASSWORD
 
+RUN echo $FLASK_DEBUG
+RUN echo $FLASK_ENV
+RUN echo $DATABASE_TYPE
+RUN echo $DATABASE_NAME
+RUN echo $DATABASE_HOST
+RUN echo $DATABASE_PORT
+RUN echo $DATABASE_USER
+RUN echo $DATABASE_PASSWORD
+
+
 RUN apt-get update && apt-get install -y \
       libpq-dev \
       gcc \
