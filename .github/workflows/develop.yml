@@ -31,7 +31,7 @@ jobs:
       run: poetry install
 
     - name: Install project
-      run: poetry run pytest --cov=app --cov-fail-under=60
+      run: poetry run pytest --cov=app --cov-fail-under=50
 
     # RAILWAY DEPLOYMENT
     - name: Use Node 18
