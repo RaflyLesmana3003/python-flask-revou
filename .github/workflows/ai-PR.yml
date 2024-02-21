@@ -5,7 +5,7 @@ on:
     types:
     - open
     branches:
-    - master
+    - main
 
 
 jobs:
